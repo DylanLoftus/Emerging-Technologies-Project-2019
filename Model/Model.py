@@ -77,7 +77,7 @@ with gzip.open('Data/train-labels-idx1-ubyte.gz', 'rb') as f:
     train_lbl = f.read()
 
 # Convert the data to arrays.
-train_img =  np.array(list(train_img[16:])).reshape(60000, 28, 28).astype(np.uint8) / 255.0
+train_img =  (~np.array(list(train_img[16:])).reshape(60000, 28, 28).astype(np.uint8) / 255.0)
 train_lbl =  np.array(list(train_lbl[ 8:])).astype(np.uint8)
 
 # Place all the training images into input
