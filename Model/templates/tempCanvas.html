@@ -1,26 +1,24 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <style>
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
-    </style>
+      <title>tempCanvas</title>
   </head>
-  <body data-rsssl=1>
-  	<div id="paint">
-  		<canvas id="myCanvas" width="28" height="28"></canvas>
-    </div>
-  
+  <body>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/scale -->
+    <style>
+    </style>
+
+    <canvas id="myCanvas" width="28" height="28" style="border:1px solid #000000;"></canvas>
+    <br>
+    <button id="Predict" onclick="SendPrediction()">Predict!</button>
+    <button id="Clear" onclick="Clear()">Clear</button>
+    <h1 id="PredictionNumber"></h1>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <script>
       var canvas = document.getElementById('myCanvas');
       var ctx = canvas.getContext('2d');
-      
-      var painting = document.getElementById('paint');
-      var paint_style = getComputedStyle(painting);
-      canvas.width = parseInt(paint_style.getPropertyValue('width'));
-      canvas.height = parseInt(paint_style.getPropertyValue('height'));
 
       var mouse = {x: 0, y: 0};
       
@@ -28,11 +26,11 @@
         mouse.x = e.pageX - this.offsetLeft;
         mouse.y = e.pageY - this.offsetTop;
       }, false);
-
-      ctx.lineWidth = 3;
+      
+      ctx.lineWidth = 1;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
-      ctx.strokeStyle = '#00CC99';
+      ctx.strokeStyle = '#000000';
       
       canvas.addEventListener('mousedown', function(e) {
           ctx.beginPath();
@@ -50,6 +48,27 @@
           ctx.stroke();
       };
 
+      // Sends the image to the flask server.
+      function SendPrediction() {
+        var datastring = document.getElementById('myCanvas').toDataURL("image/png");
+
+        // Let's create and AJAX call to our FlaskServer script.
+        $.ajax({    // Let's send the base 64 image as a JSON file.
+            url: '/predict', // Call the predict method.
+            method: 'POST', // This is a post request.
+            data: datastring, // The data we are sending.
+            success: function(res){ // If we have a successful request.              
+              document.getElementById("PredictionNumber").innerHTML = res;
+            },error: function(err){ // If we get an error.    
+              document.getElementById("PredictionNumber").innerHTML = "ERROR";
+            }
+        });
+      }
+
+      // Clears the canvas.
+      var Clear = function() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+      };
     </script>
   </body>
 </html>     
