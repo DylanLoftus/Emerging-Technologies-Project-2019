@@ -11,6 +11,8 @@ import gzip
 import numpy as np
 # For encoding categorical variables.
 import sklearn.preprocessing as pre
+#get_ipython().run_line_magic('matplotlib', 'inline')
+import matplotlib.pyplot as plt
 
 # Open the byte image file and put it in a file called file.
 with gzip.open('t10k-images-idx3-ubyte.gz', 'rb') as file:
@@ -32,10 +34,6 @@ type(I)
 
 # Make an array with the content from the file into an array with 28 rows and 28 columns.
 image = ~np.array(list(I)).reshape(28,28).astype(np.uint8)
-
-
-get_ipython().run_line_magic('matplotlib', 'inline')
-import matplotlib.pyplot as plt
 
 # Plot the image.
 plt.imshow(image, cmap="gray")
