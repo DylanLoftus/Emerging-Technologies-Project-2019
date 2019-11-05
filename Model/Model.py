@@ -15,7 +15,7 @@ import sklearn.preprocessing as pre
 import matplotlib.pyplot as plt
 
 # Open the byte image file and put it in a file called file.
-with gzip.open('t10k-images-idx3-ubyte.gz', 'rb') as file:
+with gzip.open('Data/t10k-images-idx3-ubyte.gz', 'rb') as file:
     # Read the contents of the file into a variable named 'file_content'
     file_content = file.read()
 
@@ -42,7 +42,7 @@ plt.imshow(image, cmap="gray")
 # # Reading a Label from the Labels File.
 
 # Use gzip to open the labels folder and call it file.
-with gzip.open('t10k-labels-idx1-ubyte.gz', 'rb') as file:
+with gzip.open('Data/t10k-labels-idx1-ubyte.gz', 'rb') as file:
     # Read the contents of the file into a variable named labels.
     labels = file.read()
 
@@ -69,15 +69,15 @@ model.add(kr.layers.Dense(units=10, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # Use gzip to open the training images file.
-with gzip.open('train-images-idx3-ubyte.gz', 'rb') as f:
+with gzip.open('Data/train-images-idx3-ubyte.gz', 'rb') as f:
     train_img = f.read()
 
 # Use gzip to open the training labels file.
-with gzip.open('train-labels-idx1-ubyte.gz', 'rb') as f:
+with gzip.open('Data/train-labels-idx1-ubyte.gz', 'rb') as f:
     train_lbl = f.read()
 
 # Convert the data to arrays.
-train_img = ~np.array(list(train_img[16:])).reshape(60000, 28, 28).astype(np.uint8) / 255.0
+train_img =  np.array(list(train_img[16:])).reshape(60000, 28, 28).astype(np.uint8) / 255.0
 train_lbl =  np.array(list(train_lbl[ 8:])).astype(np.uint8)
 
 # Place all the training images into input
@@ -99,10 +99,10 @@ for i in range(10):
 model.fit(inputs, outputs, epochs=10, batch_size=100)
 
 
-with gzip.open('t10k-images-idx3-ubyte.gz', 'rb') as f:
+with gzip.open('Data/t10k-images-idx3-ubyte.gz', 'rb') as f:
     test_img = f.read()
 
-with gzip.open('t10k-labels-idx1-ubyte.gz', 'rb') as f:
+with gzip.open('Data/t10k-labels-idx1-ubyte.gz', 'rb') as f:
     test_lbl = f.read()
     
 test_img = ~np.array(list(test_img[16:])).reshape(10000, 784).astype(np.uint8) / 255.0
