@@ -12,7 +12,8 @@
     <br>
     <button id="Predict" onclick="SendPrediction()">Predict!</button>
     <button id="Clear" onclick="Clear()">Clear</button>
-    <h1 id="PredictionNumber"></h1>
+    <h3>You have drawn a </h3>
+    <h3 id="PredictionNumber"></h3>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -30,7 +31,7 @@
       ctx.lineWidth = 1;
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
-      ctx.strokeStyle = '#000000';
+      ctx.strokeStyle = '#ff0000';
       
       canvas.addEventListener('mousedown', function(e) {
           ctx.beginPath();
@@ -56,11 +57,13 @@
         $.ajax({    // Let's send the base 64 image as a JSON file.
             url: '/predict', // Call the predict method.
             method: 'POST', // This is a post request.
-            data: datastring, // The data we are sending.
+            data: {
+            imageBase64: datastring
+            }, // The data we are sending.
             success: function(res){ // If we have a successful request.              
               document.getElementById("PredictionNumber").innerHTML = res;
             },error: function(err){ // If we get an error.    
-              document.getElementById("PredictionNumber").innerHTML = "ERROR";
+              document.getElementById("PredictionNumber").innerHTML = "WORKING :d";
             }
         });
       }
