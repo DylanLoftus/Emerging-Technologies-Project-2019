@@ -17,12 +17,16 @@ app = Flask(__name__)
 # Renders the template 'tempCanvas.html' which is where our web-app is.
 @app.route('/')
 def canvas():
-    return render_template('tempCanvas.html')
+   return render_template('tempCanvas.html')
+
+# Run the app.
+if __name__ == "__main__":
+    app.run(debug = True)
 
 # To load the model 
 def init():
-    model = load_model('saved_model.h5')
-    return model
+   model = load_model('saved_model.h5')
+   return model
 
 @app.route('/predict' , methods=['POST'])
 def predict():
@@ -33,8 +37,30 @@ def predict():
    # Send that data to the image parser.
    decode = imageParser(data)
 
-   #return responseString
-    
+   # Open the image convert to bytes.
+   img = Image.open(BytesIO(decode))
+   # Save the image in bytes.
+   img = img.save("image.png")
+   # Use openCV to read in the image.
+   imgRead = cv2.imread("image.png")
+   # Grayscale the image.
+   gray = cv2.cvtColor(imgRead, cv2.COLOR_BGR2GRAY)
+
+
+   # Flatten (make one dimensional) and reshape the array without changing it's data.
+   # Convert the data to float so we can divide it by 255
+   # Dividing by 255 will give us either a 1 or a 0.
+   # 1 represents a drawn pixel.
+   # 0 represents a pixel that has not been drawn on.
+   grayArray = np.ndarray.flatten(np.array(gray)).reshape(1, 784).astype("float32") / 255
+
+   # Printing the array for testing.
+   print("Printing image to array")
+   print(grayArray)
+
+   #TODO: SEND TO PREDICT NUMBER
+   #predictNumber(grayArray)
+   
 def imageParser(data):
 
    # ref: https://stackoverflow.com/questions/26070547/decoding-base64-from-post-to-use-in-pil
@@ -42,10 +68,3 @@ def imageParser(data):
    decode = base64.b64decode(tmp)
 
    return decode
-
-def predictNumber(file):
-    # To be implemented.
-
-# Run the app.
-if __name__ == "__main__":
-    app.run(debug = True)
