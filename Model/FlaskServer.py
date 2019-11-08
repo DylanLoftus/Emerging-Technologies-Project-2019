@@ -14,19 +14,14 @@ from io import BytesIO
 app = Flask(__name__)
 
 # https://flask.palletsprojects.com/en/1.1.x/quickstart/#rendering-templates
-# Renders the template 'tempCanvas.html' which is where our web-app is.
 @app.route('/')
 def canvas():
-   return render_template('tempCanvas.html')
-
-# Run the app.
-if __name__ == "__main__":
-    app.run(debug = True)
+    return render_template('tempCanvas.html')
 
 # To load the model 
 def init():
-   model = load_model('saved_model.h5')
-   return model
+    model = load_model('saved_model.h5')
+    return model
 
 @app.route('/predict' , methods=['POST'])
 def predict():
@@ -46,25 +41,28 @@ def predict():
    # Grayscale the image.
    gray = cv2.cvtColor(imgRead, cv2.COLOR_BGR2GRAY)
 
-
    # Flatten (make one dimensional) and reshape the array without changing it's data.
    # Convert the data to float so we can divide it by 255
    # Dividing by 255 will give us either a 1 or a 0.
    # 1 represents a drawn pixel.
    # 0 represents a pixel that has not been drawn on.
-   grayArray = np.ndarray.flatten(np.array(gray)).reshape(1, 784).astype("float32") / 255
+   grayArray2 = np.ndarray.flatten(np.array(gray)).reshape(1, 784).astype("float32") / 255
 
-   # Printing the array for testing.
    print("Printing image to array")
-   print(grayArray)
+   print(grayArray2)
 
-   #TODO: SEND TO PREDICT NUMBER
-   #predictNumber(grayArray)
-   
+   #responseString = predictNumber(grayArray2)
+
+   #return responseString
+
 def imageParser(data):
-
    # ref: https://stackoverflow.com/questions/26070547/decoding-base64-from-post-to-use-in-pil
    tmp = re.sub('^data:image/.+;base64,', '', data)
    decode = base64.b64decode(tmp)
 
    return decode
+
+
+# Run the app.
+if __name__ == "__main__":
+    app.run(debug = True)
