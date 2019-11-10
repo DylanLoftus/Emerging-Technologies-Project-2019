@@ -51,9 +51,9 @@ def predict():
    print("Printing image to array")
    print(grayArray2)
 
-   #responseString = predictNumber(grayArray2)
+   responseString = predictNumber(grayArray2)
 
-   #return responseString
+   return responseString
 
 def imageParser(data):
    # ref: https://stackoverflow.com/questions/26070547/decoding-base64-from-post-to-use-in-pil
@@ -62,6 +62,20 @@ def imageParser(data):
 
    return decode
 
+def predictNumber(array):
+   # Initialize the model
+   model = init()
+   # Predict what the image is with the model we made.
+   
+   prediction = model.predict(array)
+
+   print("Printing prediction : ")
+   print(np.argmax(prediction))
+
+   # https://stackoverflow.com/questions/961632/converting-integer-to-string
+   responseString = str(np.argmax(prediction))
+
+   return responseString
 
 # Run the app.
 if __name__ == "__main__":
